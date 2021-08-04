@@ -1,0 +1,100 @@
+# プレイヤー
+levelup-message: "レベルが上がりました"
+
+news: "まだたすかる・・・マダガスカル！"
+
+# 蘇生システム
+damage-revival: true
+revival-count:
+revival-time:
+revival-tadd:
+radius-down:
+lost-exp:
+lost-money:
+t-r:
+t-rm: "§e蘇生時間残り&f: §d<VALUE>"
+Title-down: "あなたは ダウンしました"
+title-die: "あなたは 死亡しました"
+stitle-die: "デスペナルティを受けました"
+die-chat: "あなたは死亡したため デスペナルティを受けました。"
+die-exp: "Lost exp -<VALUE>"
+die-money: "Lost Money -<VALUE>"
+rpd: "<PLAYER> がダウンしました 助けてあげましょう！"
+rpa: "<PLAYER> が <PLAYER-2> によって蘇生されました！！"
+
+# 宿屋
+cooltime: "&7再度使用可能になるまで &6<時間>"
+rsa: "&c既にスポーン地点が設定されています"
+
+
+# ======[ つかいかたあ ]======
+#
+# ～ お願い ～
+#
+# 色の変更は&ではなく、§(セクション)でお願いします。
+#
+# スコアボード
+# news: "" (スコアボードのニュースに表示される文字)
+#
+# 蘇生システム
+# damage-revival: false/true (ダメージを食らった際の蘇生やめさせる)
+# revival-count: <VALUE> (蘇生制限回数)
+# revival-time: <VALUE> (蘇生にかかる時間)
+# revival-tadd: <VALUE> (2回目以降に追加でかかる時間)
+# radius-down: <VALUE> (ダウンした人の通知を送る範囲)
+# lost-exp: <VALUE>% (どのくらいexpの減らすか)
+# lost-money: <VALUE>% (どのくらいmoneyの減らすか)
+# t-r: <VALUE> (蘇生可能残り時間)
+# t-rm: "&e蘇生時間残り&f: &d<VALUE>" (Hologoram に表示させる文)
+# Title-down: "あなたは ダウンしました" (ダウンした際に表示されるタイトル)
+# title-die: "あなたは 死亡しました" (死亡した際に表示されるタイトル)
+# stitle-die: "デスペナルティを受けました"(死亡した際に表示されるサブタイトル)
+# die-chat: "あなたは死亡したため デスペナルティを受けました。" (死亡した際に表示されるチャット)
+# die-exp: "Lost exp -<VALUE>" (死亡した際に失ったexpをチャットに表示)
+# die-money: "Lost Money -<VALUE>" (死亡した際に失ったmoneyをチャットに表示)
+# rpd: "<PLAYER> がダウンしました 助けてあげましょう！" (ダウンした際に周りにいる人に表示させる文)
+# rpa: "<PLAYER> が <PLAYER-2> によって蘇生されました！！" (ダウンした人が起こされた際の文)
+#
+# 宿屋
+#cooltime: "&7再度使用可能になるまで"
+#rsa: "&c既にスポーン地点が設定されています"
+#
+# inn.yml
+#
+# 114514 (NPC ID)
+#   name: "野獣" (NPCの名前)
+#   spawn:
+#     x:
+#     y:
+#     z:
+#   price: "1000" (値段)
+#   cooltime: 114514 (分)
+
+# exp.yml
+#
+# 1:
+#   exp: 10(必要な経験値数)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

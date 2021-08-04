@@ -1,0 +1,9 @@
+name: HeavenCore
+version: ${project.version}
+main: heaven.heavencore.HeavenCore
+api-version: 1.16
+depend: [Netherboard]
+commands:
+  heaven:
+    description: HevenCommand
+    usage: /<command>
