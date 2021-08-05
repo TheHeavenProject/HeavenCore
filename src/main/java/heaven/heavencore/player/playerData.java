@@ -32,11 +32,14 @@ public class playerData {
 
         String playerLocation = String.valueOf(player.getLocation());
 
-        config.set("class", "");
+        config.set("class", "None");
         config.set("level", 1);
         config.set("exp", 0);
         config.set("sp", 0);
         config.set("money", 0);
+        config.set("Strength", 0);
+        config.set("Dexterity", 0);
+        config.set("Intelligence", 0);
         config.set("spawnPoint.x", player.getLocation().getX());
         config.set("spawnPoint.y", player.getLocation().getY());
         config.set("spawnPoint.z", player.getLocation().getZ());
@@ -76,6 +79,17 @@ public class playerData {
     }
 
     public void setPlayerInt(Player player, String column, int value) {
+        File playerFile = getPlayer(player);
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
+        config.set(column, value);
+        try {
+            config.save(playerFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setPlayerString(Player player, String column, String value) {
         File playerFile = getPlayer(player);
         YamlConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
         config.set(column, value);
