@@ -30,7 +30,6 @@ public class infoBar {
     }
 
     public void onCreateBoard(Player p) {
-
         int playerLevel = playerDataManager.level.get(p);
 
         int playerNextExp = fM.getExpInt(playerLevel);

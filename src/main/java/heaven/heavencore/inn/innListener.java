@@ -3,6 +3,7 @@ package heaven.heavencore.inn;
 import heaven.heavencore.HeavenCore;
 import heaven.heavencore.player.playerData;
 import heaven.heavencore.player.playerDataManager;
+import heaven.heavencore.shop.shop;
 import heaven.heavencore.sound;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.entity.Player;
@@ -88,6 +89,9 @@ public class innListener implements Listener {
 
         if (openNPC.containsKey(player)) {
             openNPC.remove(player);
+        } else if (shop.openNPCId.containsKey(player)) {
+            shop.openNPCName.remove(player);
+            shop.openNPCId.remove(player);
         } else {
             return;
         }

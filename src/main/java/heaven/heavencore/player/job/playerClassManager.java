@@ -29,6 +29,7 @@ public class playerClassManager {
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(getAbility(className, "MaxHealth"));
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(getAbility(className, "AttackSpeed"));
         player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(getAbility(className, "AttackDamage"));
+        player.setHealthScale(20);
     }
 
     public void setStatusReset(Player player, String className) {
@@ -39,6 +40,7 @@ public class playerClassManager {
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(MaxHealth);
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackDamage);
         player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(AttackSpeed);
+        player.setHealthScale(20);
     }
 
     public void levelUp(Player player, String className) {
@@ -55,6 +57,7 @@ public class playerClassManager {
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeedNow + AttackSpeed);
         prefix.message(player, "でばっぐ");
         prefix.message(player, String.valueOf(player.getHealth()));
+        player.setHealthScale(20);
     }
 
     public void onJoin(Player player, String className) {
@@ -69,5 +72,6 @@ public class playerClassManager {
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(MaxHealth + MaxHealthClass);
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackDamage + AttackDamageClass);
         player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(AttackSpeed + AttackSpeedClass);
+        player.setHealthScale(20);
     }
 }
