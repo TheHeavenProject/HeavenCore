@@ -44,6 +44,7 @@ public class playerData {
         config.set("spawnPoint.y", player.getLocation().getY());
         config.set("spawnPoint.z", player.getLocation().getZ());
         config.set("spawnPoint.world", "world");
+        config.set("font", true);
         try {
             config.save(playerFile);
         } catch (IOException e) {
@@ -76,6 +77,12 @@ public class playerData {
         File inn = getPlayer(player);
         YamlConfiguration config = YamlConfiguration.loadConfiguration(inn);
         return config.getInt(column);
+    }
+
+    public boolean getPlayerBoolean(Player player, String column) {
+        File inn = getPlayer(player);
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(inn);
+        return config.getBoolean(column);
     }
 
     public void setPlayerInt(Player player, String column, int value) {

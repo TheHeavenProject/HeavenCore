@@ -1,6 +1,7 @@
 package heaven.heavencore.inn;
 
 import heaven.heavencore.HeavenCore;
+import heaven.heavencore.various;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,7 +68,7 @@ public class innManager {
         customFile = YamlConfiguration.loadConfiguration(inn);
     }
 
-    public void openWindow(Player player, String NPCName) {
+    public void openWindow(Player player, String NPCName, Integer npcId) {
         Inventory inv = Bukkit.createInventory(null, 27, "§l宿屋 §8- §l" + NPCName);
 
         ItemStack heal = new ItemStack(Material.POTION);
@@ -84,8 +85,16 @@ public class innManager {
         spawnMeta.setDisplayName("§c§lスポーン地点設定");
         List<String> loreSpawn = new ArrayList<>();
         loreSpawn.add("§7  新たに、スポーン地点を設定します");
+        loreSpawn.add("§7  値段: " + getInnInt("price", npcId));
         spawnMeta.setLore(loreSpawn);
         spawn.setItemMeta(spawnMeta);
+
+        ItemStack grass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta iMeta = grass.getItemMeta();
+        iMeta.setDisplayName("");
+        grass.setItemMeta(iMeta);
+
+        various.invDecoration(inv);
 
         inv.setItem(11, heal);
         inv.setItem(15, spawn);

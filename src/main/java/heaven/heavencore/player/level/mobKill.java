@@ -16,6 +16,12 @@ public class mobKill implements Listener {
     FileManager fileManager = new FileManager();
     checkExp cE = new checkExp();
 
+    public void drop(Player player, String mob) {
+
+
+
+    }
+
     @EventHandler
     public void onKill(MythicMobDeathEvent event) {
         Player player = (Player) event.getKiller();

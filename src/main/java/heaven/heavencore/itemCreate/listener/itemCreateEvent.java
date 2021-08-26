@@ -2,6 +2,7 @@ package heaven.heavencore.itemCreate.listener;
 
 import heaven.heavencore.itemCreate.itemCreate;
 import heaven.heavencore.prefix;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,40 +27,35 @@ public class itemCreateEvent implements Listener {
 
         String getName = event.getItem().getItemMeta().getDisplayName();
 
-        String getNameA = getName.replace("§", "");
-        String getNameB = getNameA.replace("7", "");
-        String getNameC = getNameB.replace("l", "");
+        String strip = ChatColor.stripColor(getName);
 
-        player.sendMessage(getFoodName(getNameC));
-
-//        if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase("&7&ltest")) {
-        if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(getFoodName(getNameC))) {
+        if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(getFoodName(strip))) {
 
             double health = player.getHealth();
             int foodLevel = player.getFoodLevel();
 
-            double getHealth = getFoodOption(getNameC, "heal");
-            int getFoodLevel = getFoodOption(getNameC, "food-level");
+            double getHealth = getFoodOption(strip, "heal");
+            int getFoodLevel = getFoodOption(strip, "food-level");
 
             double healthMax = health + getHealth;
 
             int MaxFoodLevel = foodLevel + getFoodLevel;
 
-            if (healthMax >= player.getMaxHealth()) {
-                double healthOver = healthMax - player.getMaxHealth();
+            if (healthMax > player.getMaxHealth()) {
+
+                double healthOver = healthMax - health;
                 player.setHealth(healthOver);
                 player.setFoodLevel(MaxFoodLevel);
             } else {
+
                 player.setHealth(healthMax);
                 player.setFoodLevel(MaxFoodLevel);
+
             }
 
             player.sendMessage(String.valueOf(healthMax));
             player.sendMessage(String.valueOf(MaxFoodLevel));
-
-            prefix.message(player, "debug");
         }
-        prefix.message(player, "debug");
         prefix.message(player, getName);
     }
 }
