@@ -13,11 +13,6 @@ public class innCoolTime {
         cooldowns = new HashMap<>();
     }
 
-//    public static void setCooldown(Player player, int minutes){
-//        double delay = System.currentTimeMillis() + (minutes*60000);
-//        cooldowns.put(player.getUniqueId(), delay);
-//    }
-
     public static void setCooldown(Player player, int minutes){
         double delay = System.currentTimeMillis() + (minutes*60000);
         cooldowns.put(player.getUniqueId(), delay);

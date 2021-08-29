@@ -43,6 +43,8 @@ public class checkExp {
 
             int playerNextLevel = playerDataManager.level.get(player) + 1;
 
+            player.sendTitle("§e§lレベルアップ！！", playerDataManager.level.get(player) + " → " + playerNextLevel, 10, 60, 10);
+
             player.sendMessage(getConfig.getString("levelup-message"));
             player.sendMessage(playerDataManager.level.get(player) + " → " + playerNextLevel);
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2.5F, 2);

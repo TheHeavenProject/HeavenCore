@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class FileManager {
 
@@ -60,6 +61,12 @@ public class FileManager {
         File inn = getMob();
         YamlConfiguration config = YamlConfiguration.loadConfiguration(inn);
         return config.getInt(column);
+    }
+
+    public List<String> getMobList(String column) {
+        File inn = getMob();
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(inn);
+        return config.getStringList(column);
     }
 
 }

@@ -5,6 +5,7 @@ import de.slikey.effectlib.effect.AnimatedBallEffect;
 import heaven.heavencore.HeavenCore;
 import heaven.heavencore.player.playerData;
 import heaven.heavencore.player.playerDataManager;
+import heaven.heavencore.prefix;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -30,13 +31,16 @@ public class deathPlayer implements Listener {
     playerDataManager playerDataManager = new playerDataManager();
 
     private String DEATH = "DEATH_NOW";
+    private String DEATH_OK = "DEATH_NOW_OK";
     private String REVIVAL_NOW = "REVIVAL_NOW";
     private String REVIVAL = "REVIVAL";
+    private String EFFECT = "EFFECT";
 
     public static HashMap<Player, String> deathPlayerList = new HashMap<>();
     public static HashMap<Player, String> ArmorStandName = new HashMap<>();
     public static HashMap<String, Player> ArmorStandPlayerName = new HashMap<>();
     public static HashMap<Player, String> RevivalPlayer = new HashMap<>();
+    public static HashMap<Player, String> effects = new HashMap<>();
 
     FileConfiguration config = HeavenCore.getPlugin().getConfig();
 
@@ -48,10 +52,19 @@ public class deathPlayer implements Listener {
         player.sendTitle(title, subTitle, fadeIn, stay, fadeOut);
     }
 
-    public void setEffect(Entity e) {
+    public AnimatedBallEffect effect() {
+        AnimatedBallEffect effect = new AnimatedBallEffect(HeavenCore.effectManager);
+        return effect;
+    }
 
-        AnimatedBallEffect effect = new AnimatedBallEffect(HeavenCore.em);
+    public void effectCancel(AnimatedBallEffect effect) {
+        effect.cancel();
+    }
 
+
+    public void setEffect(Entity e, Player p) {
+        AnimatedBallEffect effect = new AnimatedBallEffect(HeavenCore.effectManager);
+        effect.setEntity(e);
         effect.particle = Particle.CLOUD;
         effect.particles = 150;
         effect.particlesPerIteration = 10;
@@ -59,15 +72,8 @@ public class deathPlayer implements Listener {
         effect.xFactor = 1;
         effect.yFactor = 2;
         effect.zFactor = 1;
-        effect.xOffset = 0;
-        effect.yOffset = 0;
-        effect.zOffset = 0;
-        effect.xRotation = 0;
-        effect.yRotation = 0;
-        effect.zRotation = 0;
         effect.type = EffectType.REPEATING;
-        effect.delay = 20;
-        effect.setTargetEntity(e);
+        effect.setStartTime(5);
         effect.start();
     }
 
@@ -128,11 +134,11 @@ public class deathPlayer implements Listener {
 
                     ArmorStandName.put(player, stand.getCustomName());
                     ArmorStandPlayerName.put(stand.getCustomName(), player);
-                    player.sendMessage(stand.getCustomName());
 
                     player.setSpectatorTarget(stand);
 
-                    setEffect(stand);
+//                    setEffect(stand, player);
+//                    effects.put(player, EFFECT);
 
                     BukkitRunnable task = new BukkitRunnable() {
                         int count = config.getInt("t-r");
@@ -140,7 +146,6 @@ public class deathPlayer implements Listener {
                         public void run() {
                             if (deathPlayerList.containsKey(player)) {
                                 if (count == 0) {
-                                    player.teleport(spawnPoint);
                                     playerSendTitle(player, config.getString("title-die"), config.getString("stitle-die"), 10, 60, 10);
                                     player.sendMessage(config.getString("die-chat"));
                                     player.sendMessage(config.getString("die-exp"));
@@ -149,6 +154,9 @@ public class deathPlayer implements Listener {
                                     stand.remove();
                                     deathPlayerList.remove(player);
                                     ArmorStandName.remove(player);
+//                                    setEffect(stand, player);
+//                                    effects.remove(player);
+                                    player.teleport(spawnPoint);
                                     cancel();
                                 }
                                 if (count == 1) {
@@ -185,6 +193,7 @@ public class deathPlayer implements Listener {
                                 stand.remove();
                                 deathPlayerList.remove(player);
                                 ArmorStandName.remove(player);
+                                setEffect(stand, player);
                                 cancel();
                             }
                         }
@@ -205,7 +214,7 @@ public class deathPlayer implements Listener {
 
         Player player = event.getPlayer();
 
-        if (deathPlayerList.containsKey(player)) {
+        if (deathPlayerList.containsValue(DEATH)) {
             deathPlayerList.remove(player);
             playerSendTitle(player, config.getString("title-die"), config.getString("stitle-die"), 10, 60, 10);
             player.sendMessage(config.getString("die-chat"));

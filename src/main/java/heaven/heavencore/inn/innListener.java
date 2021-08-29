@@ -44,7 +44,6 @@ public class innListener implements Listener {
             openNPCId.put(player, event.getNPC().getId());
             innManager.openWindow(player, event.getNPC().getName(), clickNPCId);
             sound.playSound(player);
-            player.sendMessage(openNPC.get(player));
         } else {
             return;
         }
@@ -57,11 +56,6 @@ public class innListener implements Listener {
 
         String clickNPCName = openNPC.get(player);
 
-        int npcId = openNPCId.get(player);
-
-        int price = innManager.getInnInt("price", npcId);
-
-        int playerMoney = playerDataManager.money.get(player);
 
         if(event.getCurrentItem() == null){
             return;
@@ -70,6 +64,11 @@ public class innListener implements Listener {
         if (event.getView().getTitle().equalsIgnoreCase("§l宿屋 §8- §l" + clickNPCName)) {
             if (event.getCurrentItem() == null){
             }
+            int npcId = openNPCId.get(player);
+
+            int price = innManager.getInnInt("price", npcId);
+
+            int playerMoney = playerDataManager.money.get(player);
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§lスポーン地点設定")) {
 
                 if (innCoolTime.checkCooldown(player)) {

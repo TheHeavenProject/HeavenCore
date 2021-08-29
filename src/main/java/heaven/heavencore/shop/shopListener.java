@@ -237,10 +237,9 @@ public class shopListener implements Listener {
                 prefix.message(player, String.valueOf(itemAmount));
 
                 if (totalPrice(npcId, item, itemAmount, player)) {
-                    Integer amountPrice = shop.getShopInt(npcId + ".contents.price." + ChatColor.stripColor(item)) * itemStack.getAmount();
-                    Integer price = playerDataManager.money.get(player) - amountPrice;
+                    Integer price = playerDataManager.money.get(player) - shop.getShopInt(npcId + ".contents.price." + ChatColor.stripColor(itemStackName)) * itemAmount;
 
-                    playerDataManager.money.replace(player, price);
+                    various.price(player, price);
                     player.getInventory().addItem(itemCreateFood.createfoodItem(ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()), itemStack.getAmount()));
                     sound.playSoundSel(player, Sound.ENTITY_PLAYER_LEVELUP, 2);
                 } else {
@@ -296,7 +295,7 @@ public class shopListener implements Listener {
         incDown1.setItemMeta(incDownMeta1);
 
         ItemMeta buyMeta = buy.getItemMeta();
-        buyMeta.setDisplayName("§a§l購入する §f" + itemPrice + " §b§lEL");
+        buyMeta.setDisplayName("§a§l購入する §f§l" + itemPrice + " §b§lEL");
         buy.setItemMeta(buyMeta);
 
         ItemMeta cancelMeta = cancel.getItemMeta();

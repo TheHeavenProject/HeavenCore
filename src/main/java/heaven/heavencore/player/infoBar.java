@@ -74,8 +74,14 @@ public class infoBar {
         if (checkEnable(player)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
         } else {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lHP: §f" + Math.ceil(player.getHealth()) + "/" + Math.ceil(player.getMaxHealth()) + "  §b§lMP: " + "0" + "/" + "0"));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lHP: §f" + Math.ceil(player.getHealth()) + "/" + Math.ceil(player.getMaxHealth()) + "     §b§lMP: " + "0" + "/" + "0"));
         }
+
+    }
+
+    public void heal(Player player) {
+
+
 
     }
 
