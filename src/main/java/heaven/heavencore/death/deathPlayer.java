@@ -1,11 +1,15 @@
 package heaven.heavencore.death;
 
+import de.slikey.effectlib.EffectType;
+import de.slikey.effectlib.effect.AnimatedBallEffect;
 import heaven.heavencore.HeavenCore;
 import heaven.heavencore.player.playerData;
 import heaven.heavencore.player.playerDataManager;
+import heaven.heavencore.prefix;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,13 +31,16 @@ public class deathPlayer implements Listener {
     playerDataManager playerDataManager = new playerDataManager();
 
     private String DEATH = "DEATH_NOW";
+    private String DEATH_OK = "DEATH_NOW_OK";
     private String REVIVAL_NOW = "REVIVAL_NOW";
     private String REVIVAL = "REVIVAL";
+    private String EFFECT = "EFFECT";
 
     public static HashMap<Player, String> deathPlayerList = new HashMap<>();
     public static HashMap<Player, String> ArmorStandName = new HashMap<>();
     public static HashMap<String, Player> ArmorStandPlayerName = new HashMap<>();
     public static HashMap<Player, String> RevivalPlayer = new HashMap<>();
+    public static HashMap<Player, String> effects = new HashMap<>();
 
     FileConfiguration config = HeavenCore.getPlugin().getConfig();
 
@@ -43,6 +50,31 @@ public class deathPlayer implements Listener {
 
     public void playerSendTitle(Player player, String title, String subTitle, Integer fadeIn, Integer stay, Integer fadeOut) {
         player.sendTitle(title, subTitle, fadeIn, stay, fadeOut);
+    }
+
+    public AnimatedBallEffect effect() {
+        AnimatedBallEffect effect = new AnimatedBallEffect(HeavenCore.effectManager);
+        return effect;
+    }
+
+    public void effectCancel(AnimatedBallEffect effect) {
+        effect.cancel();
+    }
+
+
+    public void setEffect(Entity e, Player p) {
+        AnimatedBallEffect effect = new AnimatedBallEffect(HeavenCore.effectManager);
+        effect.setEntity(e);
+        effect.particle = Particle.CLOUD;
+        effect.particles = 150;
+        effect.particlesPerIteration = 10;
+        effect.size = 1;
+        effect.xFactor = 1;
+        effect.yFactor = 2;
+        effect.zFactor = 1;
+        effect.type = EffectType.REPEATING;
+        effect.setStartTime(5);
+        effect.start();
     }
 
     public void putRevival(Player player) {
@@ -102,9 +134,11 @@ public class deathPlayer implements Listener {
 
                     ArmorStandName.put(player, stand.getCustomName());
                     ArmorStandPlayerName.put(stand.getCustomName(), player);
-                    player.sendMessage(stand.getCustomName());
 
                     player.setSpectatorTarget(stand);
+
+//                    setEffect(stand, player);
+//                    effects.put(player, EFFECT);
 
                     BukkitRunnable task = new BukkitRunnable() {
                         int count = config.getInt("t-r");
@@ -112,15 +146,17 @@ public class deathPlayer implements Listener {
                         public void run() {
                             if (deathPlayerList.containsKey(player)) {
                                 if (count == 0) {
-                                    stand.remove();
-                                    deathPlayerList.remove(player);
-                                    ArmorStandName.remove(player);
-                                    player.teleport(spawnPoint);
                                     playerSendTitle(player, config.getString("title-die"), config.getString("stitle-die"), 10, 60, 10);
                                     player.sendMessage(config.getString("die-chat"));
                                     player.sendMessage(config.getString("die-exp"));
                                     player.sendMessage(config.getString("die-money"));
                                     changeGameMode(player, GameMode.ADVENTURE);
+                                    stand.remove();
+                                    deathPlayerList.remove(player);
+                                    ArmorStandName.remove(player);
+//                                    setEffect(stand, player);
+//                                    effects.remove(player);
+                                    player.teleport(spawnPoint);
                                     cancel();
                                 }
                                 if (count == 1) {
@@ -157,6 +193,7 @@ public class deathPlayer implements Listener {
                                 stand.remove();
                                 deathPlayerList.remove(player);
                                 ArmorStandName.remove(player);
+                                setEffect(stand, player);
                                 cancel();
                             }
                         }
@@ -177,7 +214,7 @@ public class deathPlayer implements Listener {
 
         Player player = event.getPlayer();
 
-        if (deathPlayerList.containsKey(player)) {
+        if (deathPlayerList.containsValue(DEATH)) {
             deathPlayerList.remove(player);
             playerSendTitle(player, config.getString("title-die"), config.getString("stitle-die"), 10, 60, 10);
             player.sendMessage(config.getString("die-chat"));
@@ -223,15 +260,15 @@ public class deathPlayer implements Listener {
 
                 player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + config.getInt("revival-time") + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
 
-                final int[] count = {config.getInt("revival-time")};
 
                 BukkitRunnable task = new BukkitRunnable() {
 
+                    int count = config.getInt("revival-time");
 
                     int putCount = config.getInt("revival-time") - 2;
 
                     public void run() {
-                        if (count[0] == 0) {
+                        if (count == 0) {
                             player.sendTitle("蘇生が完了しました！！", "", 10, 60, 10);
                             dPlayer.sendTitle("蘇生が完了しました！！", "", 10, 60, 10);
                             changeGameMode(dPlayer, GameMode.ADVENTURE);
@@ -242,19 +279,19 @@ public class deathPlayer implements Listener {
                             ArmorStandPlayerName.remove(clickStandName);
                             cancel();
                         }
-                        if (count[0] == 1) {
-                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count[0] + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
+                        if (count == 1) {
+                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
                         }
-                        if (count[0] == 2) {
-                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count[0] + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
+                        if (count == 2) {
+                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
                         }
-                        if (count[0] == 3) {
-                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count[0] + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
+                        if (count == 3) {
+                            player.sendTitle("現在蘇生をしています...", "蘇生完了まで残り" + count + "秒", 10, config.getInt("revival-time") * 20 - 60, 10);
                         }
-                        if (count[0] == putCount) {
+                        if (count == putCount) {
                             putRevival(player);
                         }
-                        count[0]--;
+                        count--;
                     }
                 };
                 task.runTaskTimer(HeavenCore.getPlugin(), 0, 20L);

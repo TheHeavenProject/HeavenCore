@@ -92,6 +92,12 @@ public class itemCreate {
         return config.getStringList(column);
     }
 
+    public List<Integer> getItemListInt(String fileName, String column) {
+        File inn = getFile(fileName);
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(inn);
+        return config.getIntegerList(column);
+    }
+
     public static void reloadSword() {
         File inn = getFile("sword");
         customFile = YamlConfiguration.loadConfiguration(inn);

@@ -3,9 +3,12 @@ package heaven.heavencore.inn;
 import heaven.heavencore.HeavenCore;
 import heaven.heavencore.player.playerData;
 import heaven.heavencore.player.playerDataManager;
+import heaven.heavencore.prefix;
 import heaven.heavencore.shop.shop;
 import heaven.heavencore.sound;
+import heaven.heavencore.various;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,14 +21,16 @@ public class innListener implements Listener {
 
     public String error = "§c§l予期せぬエラーが発生しました。運営へお問い合わせください。";
 
-    String prefix = "§7§l| §4§lHeaven §7§l| §r";
-
     innManager innManager = new innManager();
     playerData playerData = new playerData();
     playerDataManager playerDataManager = new playerDataManager();
 
     public HashMap<Player, String> openNPC = new HashMap<>();
     public HashMap<Player, Integer> openNPCId = new HashMap<>();
+
+    public void setCoolTime(Player player, Integer npcId) {
+        innCoolTime.setCooldown(player, innManager.getInnInt("cooltime", npcId));
+    }
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
@@ -37,9 +42,8 @@ public class innListener implements Listener {
         if (clickNPCId == clickFindId) {
             openNPC.put(player, event.getNPC().getName());
             openNPCId.put(player, event.getNPC().getId());
-            innManager.openWindow(player, event.getNPC().getName());
+            innManager.openWindow(player, event.getNPC().getName(), clickNPCId);
             sound.playSound(player);
-            player.sendMessage(openNPC.get(player));
         } else {
             return;
         }
@@ -52,32 +56,52 @@ public class innListener implements Listener {
 
         String clickNPCName = openNPC.get(player);
 
+
+        if(event.getCurrentItem() == null){
+            return;
+        }
+
         if (event.getView().getTitle().equalsIgnoreCase("§l宿屋 §8- §l" + clickNPCName)) {
             if (event.getCurrentItem() == null){
             }
-            if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§l体力回復 蘇生制限のリセット")) {
+            int npcId = openNPCId.get(player);
+
+            int price = innManager.getInnInt("price", npcId);
+
+            int playerMoney = playerDataManager.money.get(player);
+            if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§lスポーン地点設定")) {
+
+                if (innCoolTime.checkCooldown(player)) {
+                    if (playerData.getPlayerInt(player, "spawnPoint.npc") == openNPCId.get(player)) {
+                        prefix.message(player, HeavenCore.getPlugin().getConfig().getString("rsa"));
+                    } else {
+
+                        int x = innManager.getInnInt("spawn.x", npcId);
+                        int y = innManager.getInnInt("spawn.y", npcId);
+                        int z = innManager.getInnInt("spawn.z", npcId);
+
+                        playerData.setPlayerInt(player, "spawnPoint.x", x);
+                        playerData.setPlayerInt(player, "spawnPoint.y", y);
+                        playerData.setPlayerInt(player, "spawnPoint.z", z);
+                        playerData.setPlayerInt(player, "spawnPoint.npc", openNPCId.get(player));
+                        int prices = playerMoney - price;
+
+                        setCoolTime(player, npcId);
+
+                        various.price(player, prices);
+
+                        prefix.message(player, "スポーン地点を設定しました");
+                        sound.playSoundSel(player, Sound.ENTITY_PLAYER_LEVELUP, 2);
+
+                    }
+                } else {
+                    prefix.message(player, "§c§lスポーン地点を設定するには、あと" + innCoolTime.getCooldown(player));
+                }
+            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§l体力回復 蘇生制限のリセット")) {
                 Double maxHealth = player.getMaxHealth();
                 player.setHealth(maxHealth);
                 playerDataManager.revival.replace(player, String.valueOf(0));
-                player.sendMessage(prefix + "体力を全回復 蘇生制限のリセットをしました");
-            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§lスポーン地点設定")) {
-                int npcId = openNPCId.get(player);
-                int x = innManager.getInnInt("spawn.x", npcId);
-                int y = innManager.getInnInt("spawn.y", npcId);
-                int z = innManager.getInnInt("spawn.z", npcId);
-
-                int playerX = playerData.getPlayerInt(player, "spawnPoint.x");
-                int playerY = playerData.getPlayerInt(player, "spawnPoint.y");
-                int playerZ = playerData.getPlayerInt(player, "spawnPoint.z");
-
-                if (x == playerX && y == playerY && z == playerZ) {
-                    player.sendMessage(prefix + HeavenCore.getPlugin().getConfig().getString("rsa"));
-                } else {
-                    playerData.setPlayerInt(player, "spawnPoint.x", x);
-                    playerData.setPlayerInt(player, "spawnPoint.y", y);
-                    playerData.setPlayerInt(player, "spawnPoint.z", z);
-                    player.sendMessage(prefix + "スポーン地点を設定しました。");
-                }
+                prefix.message(player, "体力を全回復 蘇生制限のリセットをしました");
             }
             event.setCancelled(true);
         }
@@ -90,8 +114,10 @@ public class innListener implements Listener {
         if (openNPC.containsKey(player)) {
             openNPC.remove(player);
         } else if (shop.openNPCId.containsKey(player)) {
-            shop.openNPCName.remove(player);
-            shop.openNPCId.remove(player);
+            if (!shop.openNPCId.containsValue(shop.openNPCId.get(player))) {
+                shop.openNPCName.remove(player);
+                shop.openNPCId.remove(player);
+            }
         } else {
             return;
         }

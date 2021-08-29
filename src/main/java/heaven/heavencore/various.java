@@ -1,6 +1,33 @@
 package heaven.heavencore;
 
-public class convert {
+import heaven.heavencore.player.playerDataManager;
+import heaven.heavencore.shop.shop;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+public class various {
+
+    public static void invDecoration(Inventory inv) {
+
+        for (int i = 0; i < inv.getSize(); i++) {
+            if (i <= 9 || inv.getSize() - 9 <= i || i % 9 == 0 || i % 9 == 8) {
+                ItemStack none = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+                ItemMeta iMeta = none.getItemMeta();
+                iMeta.setDisplayName("");
+                none.setItemMeta(iMeta);
+                inv.setItem(i, none);
+            }
+        }
+    }
+
+    public static void price(Player player, Integer price) {
+        playerDataManager.money.replace(player, price);
+    }
 
     public static String convertItem(String column) {
         String itemName1 = column.replace("§0", "");

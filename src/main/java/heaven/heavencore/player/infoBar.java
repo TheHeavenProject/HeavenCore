@@ -3,6 +3,9 @@ package heaven.heavencore.player;
 import fr.minuskube.netherboard.Netherboard;
 import fr.minuskube.netherboard.bukkit.BPlayerBoard;
 import heaven.heavencore.HeavenCore;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,10 +24,21 @@ public class infoBar {
         this.plugin = plugin;
     }
 
+    public boolean checkEnable(Player player) {
+
+        if (playerData.getPlayerBoolean(player, "font")) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public void initScoreboard(){
         Bukkit.getScheduler().runTaskTimer(HeavenCore.getPlugin(), () ->{
             for(Player player : Bukkit.getOnlinePlayers()){
                 onCreateBoard(player);
+                createActionBar(player);
             }
         },0 ,5);
     }
@@ -53,6 +67,22 @@ public class infoBar {
         board.set("  " + HeavenCore.getPlugin().getConfig().getString("news"), 0);
 
         board.setName("§7>§8> §4§lHeaven §8<§7<");
+    }
+
+    public void createActionBar(Player player) {
+
+        if (checkEnable(player)) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
+        } else {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lHP: §f" + Math.ceil(player.getHealth()) + "/" + Math.ceil(player.getMaxHealth()) + "     §b§lMP: " + "0" + "/" + "0"));
+        }
+
+    }
+
+    public void heal(Player player) {
+
+
+
     }
 
 }

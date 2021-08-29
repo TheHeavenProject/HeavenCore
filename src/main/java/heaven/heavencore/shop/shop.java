@@ -1,16 +1,15 @@
 package heaven.heavencore.shop;
 
 import heaven.heavencore.HeavenCore;
-import heaven.heavencore.convert;
+import heaven.heavencore.various;
 import heaven.heavencore.itemCreate.itemCreateFood;
 import heaven.heavencore.itemCreate.itemCreatePotion;
 import heaven.heavencore.itemCreate.itemCreateSword;
 import heaven.heavencore.itemCreate.itemCreateTool;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.block.data.type.TechnicalPiston;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -117,32 +116,20 @@ public class shop {
 
             String itemName = i.getItemMeta().getDisplayName();
 
-//            String itemName1 = itemName.replace("§0", "");
-//            String itemName2 = itemName1.replace("§1", "");
-//            String itemName3 = itemName2.replace("§2", "");
-//            String itemName4 = itemName3.replace("§3", "");
-//            String itemName5 = itemName4.replace("§4", "");
-//            String itemName6 = itemName5.replace("§5", "");
-//            String itemName7 = itemName6.replace("§6", "");
-//            String itemName8 = itemName7.replace("§7", "");
-//            String itemName9 = itemName8.replace("§8", "");
-//            String itemName10 = itemName9.replace("§9", "");
-//            String itemName11 = itemName10.replace("§a", "");
-//            String itemName12 = itemName11.replace("§b", "");
-//            String itemName13 = itemName12.replace("§c", "");
-//            String itemName14 = itemName13.replace("§d", "");
-//            String itemName15 = itemName14.replace("§e", "");
-//            String itemName16 = itemName15.replace("§f", "");
-//            String itemName17 = itemName16.replace("§k", "");
-//            String itemName18 = itemName17.replace("§l", "");
-//            String itemName19 = itemName18.replace("§m", "");
-//            String itemName20 = itemName19.replace("§n", "");
-//            String itemName21 = itemName20.replace("§o", "");
-//            String itemName22 = itemName21.replace("§r", "");
-            String itemCon = convert.convertItem(itemName);
+            String itemCon = various.convertItem(itemName);
 
-            Integer num = getShopInt(npcId + ".contents.slot." + itemCon);
+//            various.invDecoration(inv, 54);
+
+            Integer num = getShopInt(npcId + ".contents.slot." + ChatColor.stripColor(itemName));
             inv.setItem(num, i);
+
+            ItemStack grass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            ItemMeta iMeta = grass.getItemMeta();
+            iMeta.setDisplayName(" ");
+            grass.setItemMeta(iMeta);
+
+            various.invDecoration(inv);
+
         }
 
         return inv;
